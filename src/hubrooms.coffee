@@ -24,13 +24,16 @@ class Hubrooms extends Adapter
 
   run: ->
     self = @
-    options =
-      query: 'login=tedkulp&apikey=123456'
+    @options =
+      login:  process.env.HUBOT_HUBROOMS_LOGIN
+      apikey: process.env.HUBOT_HUBROOMS_APIKEY
+    console.log "HipChat adapter options:", @options
+    @options.query = "login=#{@options.login}&apikey=#{@options.apikey}"
 
     process.on 'uncaughtException', (err) =>
       @robot.logger.error err.stack
 
-    @socket = SocketIO.connect 'http://localhost:3000', options
+    @socket = SocketIO.connect 'http://localhost:3000', @options
 
     @socket.on 'connect_failed', ->
       console.log 'connect failed'
